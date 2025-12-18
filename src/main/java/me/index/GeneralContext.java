@@ -24,7 +24,7 @@ public final class GeneralContext {
         System.out.println("[DEBUG] " + cfg);
 
         if (cfg.keyset().isSOSD) {
-            keys = Utils.read("~/data/" + cfg.keyset().name(), cfg.dataSize().size,
+            keys = Utils.read("~/data/" + (cfg.keyset().name()).substring(1), cfg.dataSize().size,
                     cfg.keyset().isLong, cfg.keyset().needShift, cfg.keyset().needPlusOne);
         } else if (cfg.keyset().isUniform) {
             keys = Utils.generateUniformKeys(cfg.dataSize().size, cfg.keyset().isLong, new Random(42));

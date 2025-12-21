@@ -11,6 +11,7 @@ public final class GeneralContext {
     public final Config cfg;
 
     public final List<Long> keys;
+    public final List<Long> thin_keys;
     public final List<Integer> perm;
     public long[] queries;
     public int[] queryTypes;
@@ -19,6 +20,8 @@ public final class GeneralContext {
     public final int qcount = (int) 1e8;
 
     public GeneralContext(Properties props, String sosd_path) {
+        Random rnd = new Random(42);
+
         cfg = Config.read(props);
         if (!cfg.keyset().isLong && !cfg.keyset().isSOSD && cfg.dataSize().name().equals("_max")) {
             throw new RuntimeException("incorrect properties: max size for integer keys is not available");
@@ -33,9 +36,9 @@ public final class GeneralContext {
             keys = Utils.read(sosd_path + (cfg.keyset().name()).substring(1),
                     cfg.dataSize().size, cfg.keyset().isLong, cfg.keyset().needShift, cfg.keyset().needPlusOne);
         } else if (cfg.keyset().isUniform) {
-            keys = Utils.generateUniformKeys(cfg.dataSize().size, cfg.keyset().isLong, new Random(42));
+            keys = Utils.generateUniformKeys(cfg.dataSize().size, cfg.keyset().isLong, rnd);
         } else if (cfg.keyset().isLinear) {
-            keys = Utils.generateLinearKeys(cfg.dataSize().size, cfg.keyset().isLong, new Random(42));
+            keys = Utils.generateLinearKeys(cfg.dataSize().size, cfg.keyset().isLong, rnd);
         } else {
             throw new RuntimeException("unexpected case");
         }
@@ -43,14 +46,17 @@ public final class GeneralContext {
         ksize = keys.size();
 
         // --------------------------------------------------
+        System.out.println("[DEBUG] start generate thin keys");
+
+        thin_keys = Utils.thin(keys, rnd);
+
+        // --------------------------------------------------
         System.out.println("[DEBUG] start generate perm");
 
-        perm = Utils.genPerm(ksize);
+        perm = Utils.genPerm(ksize, rnd);
 
         // --------------------------------------------------
         System.out.println("[DEBUG] start generate queries");
-
-        Random rnd = new Random(42);
 
         queries = new long[qcount];
         for (int i = 0; i < qcount; i++) {

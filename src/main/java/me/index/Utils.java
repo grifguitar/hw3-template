@@ -119,12 +119,12 @@ public final class Utils {
         return ans;
     }
 
-    public static List<Integer> genPerm(int size) {
+    public static List<Integer> genPerm(int size, Random rnd) {
         List<Integer> list = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
             list.add(i);
         }
-        Collections.shuffle(list);
+        Collections.shuffle(list, rnd);
         System.out.println("[DEBUG] size_perm: " + list.size() + " " + list.subList(0, 5) + " "
                 + list.subList(list.size() - 5, list.size()));
         return list;
@@ -155,4 +155,13 @@ public final class Utils {
         }
     }
 
+    public static List<Long> thin(List<Long> k, Random rnd) {
+        List<Long> k2 = new ArrayList<>(k.size() / 3);
+        for (Long a : k) {
+            if (rnd.nextDouble() < 0.3333)
+                k2.add(a);
+        }
+        System.out.println("[DEBUG] thin_size: " + k2.size());
+        return k2;
+    }
 }

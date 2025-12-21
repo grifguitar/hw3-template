@@ -79,31 +79,31 @@ public class Main {
 
     public static long test_t_map(GeneralContext context) {
         Storage storage = new TMap();
-        storage.init(context.keys, new ArrayList<>(context.keys), context.cfg.maxErr().value);
+        storage.init(context.thin_keys, new ArrayList<>(context.thin_keys), context.cfg.maxErr().value);
         return test_common(storage, context, "T_MAP");
     }
 
     public static long test_btree(GeneralContext context) {
         Storage storage = new BTree();
-        storage.init(context.keys, new ArrayList<>(context.keys), context.cfg.maxErr().value);
+        storage.init(context.thin_keys, new ArrayList<>(context.thin_keys), context.cfg.maxErr().value);
         return test_common(storage, context, "BTREE");
     }
 
     public static long test_btree_adapt(GeneralContext context) {
         Storage storage = new BTreeAdapt();
-        storage.init(context.keys, new ArrayList<>(context.keys), context.cfg.maxErr().value);
+        storage.init(context.thin_keys, new ArrayList<>(context.thin_keys), context.cfg.maxErr().value);
         return test_common(storage, context, "BTREE_ADAPT");
     }
 
     public static long test_l_index(GeneralContext context) {
         Storage storage = new LIndex();
-        storage.init(context.keys, new ArrayList<>(context.keys), context.cfg.maxErr().value);
+        storage.init(context.thin_keys, new ArrayList<>(context.thin_keys), context.cfg.maxErr().value);
         return test_common(storage, context, "L_INDEX");
     }
 
     public static long test_l_index_adapt(GeneralContext context) {
         Storage storage = new LIndexAdapt();
-        storage.init(context.keys, new ArrayList<>(context.keys), context.cfg.maxErr().value);
+        storage.init(context.thin_keys, new ArrayList<>(context.thin_keys), context.cfg.maxErr().value);
         return test_common(storage, context, "L_INDEX_ADAPT");
     }
 

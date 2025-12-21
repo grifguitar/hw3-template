@@ -4,6 +4,8 @@ import me.index.config.*;
 import me.index.map.*;
 
 import java.io.FileWriter;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -31,8 +33,11 @@ public class Main {
         if (!exist) {
             throw new RuntimeException("run_mask must be in range 0000...1111");
         }
-        try (FileWriter writer = new FileWriter("res.json")) {
-            String[] results = solve(args[0], args[1], args[2], args[3]);
+        Path project_folder = Paths.get(args[0]);
+        String config_path = project_folder.resolve("config.properties").toString();
+        String result_path = project_folder.getParent().resolve("res.json").toString();
+        try (FileWriter writer = new FileWriter(result_path)) {
+            String[] results = solve(config_path, args[1], args[3]);
             writer.write("[");
             for (int i = 0; i < results.length; i++) {
                 writer.write(results[i]);
@@ -45,8 +50,8 @@ public class Main {
         }
     }
 
-    public static String[] solve(String path, String sosd_path, String name, String mask) {
-        GeneralContext context = GeneralContext.read(path + name, sosd_path);
+    public static String[] solve(String config_path, String sosd_path, String mask) {
+        GeneralContext context = GeneralContext.read(config_path, sosd_path);
 
         long res_t_map = test_t_map(context);
         long res_btree = mask.charAt(0) == '0' ? 0 : test_btree(context);

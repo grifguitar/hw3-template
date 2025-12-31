@@ -3,9 +3,11 @@ package me.index;
 import me.index.config.*;
 import me.index.map.*;
 
-import java.io.FileWriter;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -35,16 +37,20 @@ public class Main {
         }
         Path project_folder = Paths.get(args[0]);
         String config_path = project_folder.resolve("config.properties").toString();
-        String result_path = project_folder.getParent().resolve("res.json").toString();
-        try (FileWriter writer = new FileWriter(result_path)) {
+        String result_path = project_folder.getParent().resolve("results.jsonl").toString();
+        String username = project_folder.getParent().getFileName().toString();
+        try (FileChannel f = FileChannel.open(
+                Paths.get(result_path),
+                StandardOpenOption.CREATE,
+                StandardOpenOption.WRITE,
+                StandardOpenOption.APPEND
+        )) {
             String[] results = solve(config_path, args[1], args[2]);
-            writer.write("[");
-            for (int i = 0; i < results.length; i++) {
-                writer.write(results[i]);
-                if (i != results.length - 1)
-                    writer.write(",");
+            String msg = "{\"" + username + "\":[" + String.join(",", results) + "]}\n";
+            ByteBuffer buf = ByteBuffer.wrap(msg.getBytes());
+            while (buf.hasRemaining()) {
+                f.write(buf);
             }
-            writer.write("]");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

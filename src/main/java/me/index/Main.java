@@ -37,7 +37,7 @@ public class Main {
         }
         Path project_folder = Paths.get(args[0]);
         String config_path = project_folder.resolve("config.properties").toString();
-        String result_path = project_folder.getParent().resolve("results.jsonl").toString();
+        String result_path = project_folder.getParent().resolve("stand.jsonl").toString();
         String username = project_folder.getFileName().toString();
         try (FileChannel f = FileChannel.open(
                 Paths.get(result_path),

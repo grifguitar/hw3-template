@@ -1,9 +1,10 @@
 package me.index.map;
 
 import me.index.Holder;
-import me.index.algo.LRM;
-import me.index.algo.Regression;
+import me.index.math.LRM;
 import me.index.algo.TConsumer;
+import me.index.segment.Window;
+import me.index.segment.Windows;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,9 +30,7 @@ public class LIndex implements Storage {
             models.add(new Model(keys.subList(start, end), values.subList(start, end), lrm, maxErr));
         };
 
-        Regression regression = new Regression();
-
-        regression.split(keys, maxErr, lambda);
+        Window.split(Windows.LINEAR.INSTANCE, keys, maxErr, lambda);
 
         new Models(min_keys, max_keys, models);
 
